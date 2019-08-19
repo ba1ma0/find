@@ -14,7 +14,7 @@
    (2)修改postgresql.conf文件,在文件的任意地方添加 listen_addresses = '*' 然后保存   
 ![](https://raw.githubusercontent.com/ba1ma0/images/master/find/6.png)
    修改pg_hba.conf文件,在文件任意地方添加      
-   # TYPE  DATABASE  USER  CIDR-ADDRESS  METHOD  
+  \# TYPE  DATABASE  USER  CIDR-ADDRESS  METHOD  
    host  all  all 0.0.0.0/0 md5 然后保存  
 ![](https://raw.githubusercontent.com/ba1ma0/images/master/find/7.png)
    或者您也可以参考 http://lazybios.com/2016/11/how-to-make-postgreSQL-can-be-accessed-from-remote-client/  
