@@ -2,14 +2,14 @@
 ========
 ## 注意
    因为精力有限现在只适配了Windows 10 & Python 3.7,Linux上暂时还没有适配,后期会慢慢适配,Windows上运行应该是没有问题的,在使用前,您需要做以下2步操作
-### 1)找到..\find\module\awvs.py文件  
+### 1.找到..\find\module\awvs.py文件  
 ![](https://raw.githubusercontent.com/ba1ma0/images/master/find/5.png)
       在awvs.py文件的16-23行根据相关提示输入您的awvs相关信息,然后保存文件  
 ![](https://raw.githubusercontent.com/ba1ma0/images/master/find/3.png)
 
-### 2)如果您的awvs部署在远程服务器上您需要简单的两步(如果您的awvs部署在本地则不需要这步)
+### 2 如果您的awvs部署在远程服务器上您需要简单的两步(如果您的awvs部署在本地则不需要这步)
    (1)进入 /home/acunetix/.acunetix_trial/db  (ubuntu下awvs默认安装路径)  
-![](https://raw.githubusercontent.com/ba1ma0/images/master/find/3.png)
+![](https://raw.githubusercontent.com/ba1ma0/images/master/find/4.png)
    
    (2)修改postgresql.conf文件,在文件的任意地方添加 listen_addresses = '*' 然后保存   
 ![](https://raw.githubusercontent.com/ba1ma0/images/master/find/6.png)
