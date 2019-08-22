@@ -96,9 +96,13 @@ def menu():
            if type(res) == type([]):
                 for host in res:
                     host     =  tool.setDefaultPro(url=host)
+                    msg             = "[+] Start detecting if {host} is vulnerable to CVE-2019-2729".format(host=host)
+                    print(msg)
                     weblogic_cve_2019_2729.check(host)
            else:
                 host     =  tool.setDefaultPro(url=res)
+                msg             = "[+] Start detecting if {host} is vulnerable to CVE-2019-2729".format(host=host)
+                print(msg)
                 weblogic_cve_2019_2729.check(host)
 
 
