@@ -1,4 +1,4 @@
-import socket,os,threading,queue,time,re,platform
+import socket,os,threading,queue,time,re,platform,sys
 from module import printc
 try:
     import requests
@@ -77,6 +77,40 @@ def content2List(add):
 #     f.write(content)
 #     f.write("\n")
 #     f.close()
+
+class Logger(object):
+    def __init__(self, fileN="Default.log"):
+        try:
+            self.terminal = sys.stdout
+            self.log = open(fileN, "w+")
+        except:
+            print("换个路径试一试")
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+    def flush(self):
+        pass
+def output(add):
+    sys.stdout = Logger(add)
+
+#存放输出文件的文件名
+def address(add):
+    if "Windows" in systeminfo:
+        if ":" in add:
+            address=add
+        else:
+            address = str(os.getcwd()) + "\\" + str(add)
+    elif "Linux" in systeminfo:
+        if "/" in add:
+             address=add
+        else:
+            address = str(os.getcwd()) + "/" + str(add) 
+    return address
+#如果存在输入文件则打印,否则不打印    
+def printIfExist(address):
+    if address:
+        s="[*] The result file is at {add}".format(add=address)
+        printc.printf(s, "skyblue")
 
 #判断是否访问的页面是否存在
 def ifExist(res):
