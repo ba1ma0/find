@@ -146,7 +146,7 @@ Vulnerability:
     -weblogic To find target's weblogic vulnerability                       Example: -weblogic  targets.txt or -weblogic 127.0.0.1
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
-    python  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro https   -profile  F  -speed f  -second 1800
+    python  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800
     python  find.py   -add C:\\Users\\urls.txt   
     python  find.py   -delete 1                                                              
     --------------------------------------------------------------------------------------------------------------------
