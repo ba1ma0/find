@@ -28,7 +28,7 @@ def setStr2SameLen(length,string):
     else:
         return string
 def detective():
-    add="E:\\渗透测试\\2019\\2019-1\\浙江移动\\url_new.txt"
+    add="E:\\test.txt"
     info = content2List(add)
     for i in info:
         url="http://"+i

@@ -14,12 +14,12 @@ current_time = time.strftime("%X",time.localtime())
 #taskInfo主要用来存储taskId和taskName   
 taskInfo = {}
 ########################  AWVS 相关配置信息区   ##################################
-apikey_awvs = "1986ad8c0a5b3df4d7028d5f3c06e936ca687f4b200384755b15e531c1aeb4503"       #awvsAPIkey值, Administrator>profile>API Key>generate API
+apikey_awvs = "1986ad8c0a5b3df4d7028d5f3c06e936cb0f1b8aa55904b579c3328435dc4b155"       #awvsAPIkey值, Administrator>profile>API Key>generate API
 host        = "49.234.98.25"                                                            #主机地址
 port        = "45432"                                                                   #awvs默认端口号
 database    = "wvs"                                                                     #awvs数据库默认名称
 user        = "acunetix"                                                                #awvs的默认用户名
-password    = "UxeOMHYzbPAqpRSGabPdnQQ2d6wSTRKS"                                        #连接awvs的密码
+password    = "2HzX6uU6aeWLUAMz2iNHnEIY41B0dN2X"                                        #连接awvs的密码
 ########################  AWVS 相关配置信息区   ##################################
 #add         = "D:\\Github\\butian\\test.txt"                                            #待扫描站点txt文件地址
 #start_date  = "20190724T122000+0800"                                                    #开始扫描的时间,0800是东8时区区
