@@ -1,7 +1,9 @@
 # -- coding: utf-8 --
 import threading, socket,time,os,re,sys,string,platform
 from module import printc,butianInfo,queue,argparse,awvs,tool
-from vulnerability import weblogic_cve_2019_2729
+from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE
+######################################全局变量区######################################
+current_dir     =  str(os.getcwdb(), encoding = "utf-8")          #获取当前文件根目录绝对路径
 vulnerable_list =  []                                             #存放有漏洞的主机
 present_time    =  time.strftime("%Y-%m-%d %X",time.localtime())  #当前详细时间 2019-08-08 14:59:22 
 present_time    =  present_time.split(" ")                        #转化为['2019-08-08', '14:59:47']
@@ -9,6 +11,7 @@ day             =  present_time[0].replace("-","")                #当前日期2
 time_show       =  present_time[1].replace(":","")                #当前时间145947
 seconds_default =  600                                            #默认间隔时间10分钟
 present_awvs_time = "{day}T{time}+0800".format(day=day,time=time_show) #转为化为20190724T122000+0800
+######################################全局变量区######################################
 def menu():
     global vulnerable_list
     day         = time.strftime("%Y-%m-%d",time.localtime()).replace("-","")    #当前日期20190725
@@ -27,7 +30,8 @@ def menu():
     parser.add_argument('-delete', dest='delete', help='Delete targets 4 options:1[NO vuln targets],2[NO vuln targets+low vuln targets],3[NO vuln targets+Medium vuln targets],4[All targets]  Example: -delete 1')
     parser.add_argument('-second', dest='second', help='second    Example: -second 3600')
 #vulnerability
-    parser.add_argument('-weblogic', dest='weblogic', help='Example: -weblogic  targets.txt or -weblogic 127.0.0.1')
+    parser.add_argument('-weblogic', dest='weblogic', help='Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1')
+    parser.add_argument('-joomla', dest='joomla', help='Example: -joomla  /usrs/targets.txt or -joomla 127.0.0.1')
     parser.add_argument('-o', dest='o', help='Example: -o  res.txt')
     parser.add_argument('-help', action="store_true", help='To show help information')
     options = parser.parse_args()
@@ -88,6 +92,7 @@ def menu():
             address=tool.address(options.o)   
             tool.output(address)
         res     = tool.input2result(str(options.weblogic))
+
         #指定http协议时
         if options.pro:
             protocol      = str(options.pro)
@@ -116,6 +121,51 @@ def menu():
         #     printc.printf(msg,'yellow')
         #     tool.printList(vulnerable_list,"green")   
         tool.printIfExist(address)
+#检查joomla的RCE漏洞
+    elif options.joomla:
+        if options.o:
+            address=tool.address(options.o)   
+            tool.output(address)
+        res     = tool.input2result(str(options.joomla))
+        #print(res)
+        #指定http协议时
+        if options.pro:
+            protocol      = str(options.pro)
+            if type(res) == type([]):
+                for host in res:
+                    host     =  tool.setDefaultPro(protocol=protocol,url=host)
+                    msg = "[+] Starting detect {target}".format(target=host)
+                    print(msg)
+                    host     =  tool.setDefaultPro(protocol=protocol,url=host)
+                    command  =  Joomla_3_4_6_RCE.command(host) 
+                    os.system(command)
+
+            else:
+                host     = res
+                host     =  tool.setDefaultPro(protocol=protocol,url=res)
+                msg      = "[+] Starting detect {target}".format(target=res)
+                print(msg)
+                command  =  Joomla_3_4_6_RCE.command(res) 
+                os.system(command)
+        else:
+            if type(res) == type([]):
+                for host in res:
+                    host        =  tool.setDefaultPro(url=host)
+                    msg = "[+] Starting detect {target}".format(target=host)
+                    print(msg)
+                    host     =  tool.setDefaultPro(protocol=protocol,url=host)
+                    command  =  Joomla_3_4_6_RCE.command(host) 
+                    os.system(command)
+
+            else:
+                host     = res
+                host        =  tool.setDefaultPro(url=host)
+                msg      = "[+] Starting detect {target}".format(target=res)
+                print(msg)
+                command  =  Joomla_3_4_6_RCE.command(res) 
+                os.system(command)
+
+
     else:
         helpInfo()
 
@@ -143,7 +193,8 @@ AWVS:
     -second  Another scan task will start in N seconds latter   Example: -seconds 3600(which mean another new task will start 1 hour latter Default is 1200s)    -help    To show help information
     -o       Output result to file
 Vulnerability:
-    -weblogic To find target's weblogic vulnerability                       Example: -weblogic  targets.txt or -weblogic 127.0.0.1
+    -weblogic To find target's weblogic vulnerability                       Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1
+    -joomla   To find target's joomla   vulnerability                       Example: -joomla    /usrs/targets.txt or -joomla 127.0.0.1              
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
     python  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800

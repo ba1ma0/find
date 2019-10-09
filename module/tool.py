@@ -437,7 +437,9 @@ def print2sheet(t1_len=0,t1=0,title1=0,t2_len=0,t2=0,title2=0,t3_len=0,t3=0,titl
 #简单点讲就是根据用户输入的来决定输出结果是什么
 def input2result(s):
     res = s
-    if "//" not in s:
+    if "http" in s:
+        res = s
+    elif "/"  in s:
         res = content2List(s)
     return res
 #有些输入不含有http协议或者https,这时需要将没有协议的url默认添上协议,有协议的则不做处理    
