@@ -134,7 +134,7 @@ def menu():
             if type(res) == type([]):
                 for host in res:
                     host     =  tool.setDefaultPro(protocol=protocol,url=host)
-                    msg = "[+] Starting detect {target}".format(target=host)
+                    msg = "[+] Starting detecting {target}".format(target=host)
                     print(msg)
                     host     =  tool.setDefaultPro(protocol=protocol,url=host)
                     command  =  Joomla_3_4_6_RCE.command(host) 
@@ -143,7 +143,7 @@ def menu():
             else:
                 host     = res
                 host     =  tool.setDefaultPro(protocol=protocol,url=res)
-                msg      = "[+] Starting detect {target}".format(target=res)
+                msg      = "[+] Starting detecting {target}".format(target=res)
                 print(msg)
                 command  =  Joomla_3_4_6_RCE.command(res) 
                 os.system(command)
@@ -151,7 +151,7 @@ def menu():
             if type(res) == type([]):
                 for host in res:
                     host        =  tool.setDefaultPro(url=host)
-                    msg = "[+] Starting detect {target}".format(target=host)
+                    msg = "[+] Starting detecting {target}".format(target=host)
                     print(msg)
                     host     =  tool.setDefaultPro(protocol=protocol,url=host)
                     command  =  Joomla_3_4_6_RCE.command(host) 
@@ -160,7 +160,7 @@ def menu():
             else:
                 host     = res
                 host        =  tool.setDefaultPro(url=host)
-                msg      = "[+] Starting detect {target}".format(target=res)
+                msg      = "[+] Starting detecting {target}".format(target=res)
                 print(msg)
                 command  =  Joomla_3_4_6_RCE.command(res) 
                 os.system(command)
