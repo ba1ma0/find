@@ -4,6 +4,9 @@
    最近因为精力和时间又有点多了,所以现在不仅适配了windows上Python3环境还适配了linux,Mac上的Python3环境,而且我在别人的电脑上是可以正常运行的,一些必要的依赖包我已经封装好了,所以正常情况下在windwos和Linux上python3运行是不会有问题的,在使用前,您需要做以下2步操作  
    如果实在解决不了:  
    QQ:1058763824
+## 更新 2019-10-09 23:32:08  
+   (1) 修复在进行weblogic漏洞验证时的一个问题  
+   (2) 新增joomla漏洞验证 python3 find.py  -joomla  https://www.baidu.com  或者 python3 find.py  -joomla  /Users/play/github/test.txt
 ## 更新 2019-09-09
    最新适配Mac
    在Mac上适配过程中遇到了一个大坑,psycopg2在Mac上安装异常崎岖,本来很很简单的一条命令就可以解决,但是pip install psycopg2之后各种报错,我尝试了,源码编译,.whl文件安装但是均失败  
