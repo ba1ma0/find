@@ -32,7 +32,7 @@ def menu():
 #vulnerability
     parser.add_argument('-weblogic', dest='weblogic', help='Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1')
     parser.add_argument('-joomla', dest='joomla', help='Example: -joomla  /usrs/targets.txt or -joomla 127.0.0.1')
-    parser.add_argument('-ecology', dest='ecology', help='Example: -ecology   /usrs/targets.txt or -ecology   /usrs/targets.txt')
+    parser.add_argument('-ecology', dest='ecology', help='Example: -ecology   baidu.com or -ecology   /usrs/targets.txt')
     parser.add_argument('-o', dest='o', help='Example: -o  res.txt')
     parser.add_argument('-help', action="store_true", help='To show help information')
     options = parser.parse_args()
@@ -206,7 +206,7 @@ AWVS:
 Vulnerability:
     -weblogic To find target's weblogic vulnerability                       Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1
     -joomla   To find target's joomla   vulnerability                       Example: -joomla    /usrs/targets.txt or -joomla  https://www.baidu.com   
-    -ecology  To find target's ecology  vulnerability                       Example: -ecology   /usrs/targets.txt or -ecology   /usrs/targets.txt       
+    -ecology  To find target's ecology  vulnerability                       Example: -ecology   baidu.com or -ecology   /usrs/targets.txt       
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
     python  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800
