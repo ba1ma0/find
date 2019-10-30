@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 import threading, socket,time,os,re,sys,string,platform
 from module import printc,butianInfo,queue,argparse,awvs,tool
-from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE
+from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE,ecology_OA_db_conf_leak
 ######################################全局变量区######################################
 current_dir     =  str(os.getcwdb(), encoding = "utf-8")          #获取当前文件根目录绝对路径
 vulnerable_list =  []                                             #存放有漏洞的主机
@@ -32,6 +32,7 @@ def menu():
 #vulnerability
     parser.add_argument('-weblogic', dest='weblogic', help='Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1')
     parser.add_argument('-joomla', dest='joomla', help='Example: -joomla  /usrs/targets.txt or -joomla 127.0.0.1')
+    parser.add_argument('-ecology', dest='ecology', help='Example: -ecology   /usrs/targets.txt or -ecology   /usrs/targets.txt')
     parser.add_argument('-o', dest='o', help='Example: -o  res.txt')
     parser.add_argument('-help', action="store_true", help='To show help information')
     options = parser.parse_args()
@@ -164,7 +165,17 @@ def menu():
                 print(msg)
                 command  =  Joomla_3_4_6_RCE.command(res) 
                 os.system(command)
-
+#检测泛微OA数据库配置信息泄漏 
+    elif options.ecology:
+        if options.o:
+            address=tool.address(options.o)   
+            tool.output(address)
+        url     = tool.input2result(str(options.ecology))
+        #print(res)
+        #指定http协议时
+        if options.pro:
+            protocol = str(options.pro)
+        ecology_OA_db_conf_leak.run(url,protocol)
 
     else:
         helpInfo()
@@ -194,7 +205,8 @@ AWVS:
     -o       Output result to file
 Vulnerability:
     -weblogic To find target's weblogic vulnerability                       Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1
-    -joomla   To find target's joomla   vulnerability                       Example: -joomla    /usrs/targets.txt or -joomla  https://www.baidu.com             
+    -joomla   To find target's joomla   vulnerability                       Example: -joomla    /usrs/targets.txt or -joomla  https://www.baidu.com   
+    -ecology  To find target's ecology  vulnerability                       Example: -ecology   /usrs/targets.txt or -ecology   /usrs/targets.txt       
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
     python  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800

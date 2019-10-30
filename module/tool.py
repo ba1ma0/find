@@ -1,4 +1,4 @@
-import socket,os,threading,queue,time,re,platform,sys
+import socket,os,threading,queue,time,re,platform,sys,json,random
 from module import printc
 try:
     import requests
@@ -442,6 +442,75 @@ def input2result(s):
     elif "/"  in s:
         res = content2List(s)
     return res
+#根据ip地址判断该IP地址详细信息 例如:218.205.56.222返回结果:中国浙江杭州移动
+#ip参数既可以是ip地址也可以存放ip地址的txt文件
+def  findAddressByIp(ip,protocol="http"):
+    ip        = input2result(ip)
+    setSheetTitle(t1_len=8,title1="IP",t2_len=1,title2="API ",t3_len=10,title3="Information")
+    if type(ip)  == type(""): #当参数是ip地址时
+        flag       =  False #标志位,如果flag为false时一直请求
+        api        = "http://ip.taobao.com/service/getIpInfo.php?ip={ip}".format(ip=ip)
+        try:
+            #当使用taobao接口进行查询时
+            res             = json.loads(requests.get(api,timeout=4).text)
+            if res['code'] == 0 and res['data'] != "":
+                address     = str(res["data"]["country"]) + str(res["data"]["region"]) + res["data"]["city"] + res["data"]["isp"]  
+                print2sheet(t1_len=8,t1=str(ip),title1="IP",t2_len=1,t2="Taobao",title2='API',t3_len=10,t3=address,title3='Information')
+            else:
+                api         = "http://ip-api.com/json/{ip}?lang=zh-CN".format(ip=ip)
+                res         = json.loads(requests.get(api,timeout=4).text)
+                if res['status'] == "success" and res['query'] == str(ip):#查询成功的标志
+                    address     = str(res["country"]) + str(res["regionName"]) + res["isp"]  
+                    print2sheet(t1_len=8,t1=str(ip),title1="IP",t2_len=1,t2="ip-api",title2='API',t3_len=10,t3=address,title3='Information')
+                else:
+                    print2sheet(t1_len=8,t1=str(ip),title1="IP",t2_len=1,t2="None",title2='API',t3_len=10,t3="两个接口都无发正常使用,请手工查询",title3='Information')
+        except Exception as e:
+                #当淘宝接口无法返回正常结果时,使用另外一个接口
+                try:
+                    api         = "http://ip-api.com/json/{ip}?lang=zh-CN".format(ip=ip)
+                    res         = json.loads(requests.get(api,timeout=4).text)
+                    if res['status'] == "success" and res['query'] == str(ip):#查询成功的标志
+                        address     = str(res["country"]) + str(res["regionName"]) + res["isp"]  
+                        print2sheet(t1_len=8,t1=str(ip),title1="IP",t2_len=1,t2="ip-api",title2='API',t3_len=10,t3=address,title3='Information')
+                except:
+                    print2sheet(t1_len=8,t1=str(ip),title1="IP",t2_len=1,t2="None",title2='API',t3_len=10,t3="两个接口都无发正常使用,请手工查询",title3='Information')
+                    pass
+#当参数是ip.txt时
+    else: 
+        for i in ip:
+            api        = "http://ip.taobao.com/service/getIpInfo.php?ip={ip}".format(ip=i)
+            try:
+                #当使用taobao接口进行查询时
+                res             = json.loads(requests.get(api,timeout=4).text)
+                if res['code'] == 0 and res['data'] != "":
+                    address     = str(res["data"]["country"]) + str(res["data"]["region"]) + res["data"]["city"] + res["data"]["isp"]  
+                    print2sheet(t1_len=8,t1=str(i),title1="IP",t2_len=1,t2="Taobao",title2='API',t3_len=10,t3=address,title3='Information')
+                else:
+                    api         = "http://ip-api.com/json/{ip}?lang=zh-CN".format(ip=ip)
+                    res         = json.loads(requests.get(api,timeout=4).text)
+                    if res['status'] == "success" and res['query'] == str(ip):#查询成功的标志
+                        address     = str(res["country"]) + str(res["regionName"]) + res["isp"]  
+                        print2sheet(t1_len=8,t1=str(i),title1="IP",t2_len=1,t2="ip-api",title2='API',t3_len=10,t3=address,title3='Information')
+                    else:
+                        print2sheet(t1_len=8,t1=str(i),title1="IP",t2_len=1,t2="None",title2='API',t3_len=10,t3="两个接口都无发正常使用,请手工查询",title3='Information')
+            except Exception as e:
+                    #当淘宝接口无法返回正常结果时,使用另外一个接口
+                    try:
+                        api         = "http://ip-api.com/json/{ip}?lang=zh-CN".format(ip=i)
+                        res         = json.loads(requests.get(api,timeout=4).text)
+                        if res['status'] == "success" and res['query'] == str(i):#查询成功的标志
+                            address     = str(res["country"]) + str(res["regionName"]) + res["isp"]  
+                            print2sheet(t1_len=8,t1=str(i),title1="IP",t2_len=1,t2="ip-api",title2='API',t3_len=10,t3=address,title3='Information')
+                    except:
+                        print2sheet(t1_len=8,t1=str(i),title1="IP",t2_len=1,t2="None",title2='API',t3_len=10,t3="两个接口都无发正常使用,请手工查询",title3='Information')
+                        pass
+    #     except Exception as e:
+#         msg  =  '''出问题了!请检查是否是以下原因
+# 1.网络是够通畅
+# 2.ip.txt文件只能是ip地址不能包含其他信息
+#         '''
+#         print(msg)
+    
 #有些输入不含有http协议或者https,这时需要将没有协议的url默认添上协议,有协议的则不做处理    
 def setDefaultPro(protocol="http",url=""):
     res         = ''
