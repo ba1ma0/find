@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 import threading, socket,time,os,re,sys,string,platform
 from module import printc,butianInfo,queue,argparse,awvs,tool
-from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE,ecology_OA_db_conf_leak
+from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE,ecology_OA_db_conf_leak,CNVD_2020_10487_Tomcat_Ajp_lfi,exploit
 ######################################全局变量区######################################
 current_dir     =  str(os.getcwdb(), encoding = "utf-8")          #获取当前文件根目录绝对路径
 vulnerable_list =  []                                             #存放有漏洞的主机
@@ -32,6 +32,12 @@ def menu():
 #vulnerability
     parser.add_argument('-weblogic', dest='weblogic', help='Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1')
     parser.add_argument('-joomla', dest='joomla', help='Example: -joomla  /usrs/targets.txt or -joomla 127.0.0.1')
+    parser.add_argument('-exploit', dest='exploit', help='Example: -exploit  /usrs/targets.txt or -exploit 127.0.0.1')
+    parser.add_argument('-command', dest='command', help='Example: -command  python2 poc.py  -p 3389  -d /web/web.xml ')
+    parser.add_argument('-poc_add', dest='poc_add', help='Example: -poc_add="vulnerability,cve-2020-01-01,cve-2020-01-01.py')
+    parser.add_argument('-flag', dest='flag', help='Example: -flag="Refused,No Response"')
+    parser.add_argument('-time_out', dest='time_out', help='Example: -time_out 1  Default is 2')
+    parser.add_argument('-vuln_name', dest='vuln_name', help='Example: -vuln_name  cve-2020-01-01 Default is NULL')
     parser.add_argument('-ecology', dest='ecology', help='Example: -ecology   baidu.com or -ecology   /usrs/targets.txt')
     parser.add_argument('-o', dest='o', help='Example: -o  res.txt')
     parser.add_argument('-help', action="store_true", help='To show help information')
@@ -140,7 +146,6 @@ def menu():
                     host     =  tool.setDefaultPro(protocol=protocol,url=host)
                     command  =  Joomla_3_4_6_RCE.command(host) 
                     os.system(command)
-
             else:
                 host     = res
                 host     =  tool.setDefaultPro(protocol=protocol,url=res)
@@ -165,6 +170,45 @@ def menu():
                 print(msg)
                 command  =  Joomla_3_4_6_RCE.command(res) 
                 os.system(command)
+
+#任何poc只要放进到/find/vulnerability/按照一定规则就可以进行批量检测
+    elif options.exploit:
+        dataList    = []
+        if options.o:
+            address = tool.address(options.o)
+            tool.output(address)
+        targets      = tool.input2result(str(options.exploit))
+        if options.command:
+            command  = options.command
+        else:
+            msg      = "您必须输入原POC的完整验证命令。注意不需要加绝对路径,而且不许要输入目标,目标跟在-exploit参数后面"
+            print(msg)
+        if options.flag:
+            flag     = options.flag.split(",")
+        else:
+            flag     = ["Operation timed out","most recent call last",'NotImplementedError']
+        if options.poc_add:
+            poc_add = options.poc_add.split(",")
+        else:
+            pass
+        if options.time_out:
+            time_out = options.time_out
+        else:
+            time_out = 2
+        if options.vuln_name:
+            vuln_name = options.vuln_name
+        else:
+            vuln_name = ""
+        if type(targets) == type([]):
+            for host in targets:
+                dataList.append(exploit.exploit(target = host,flag = flag,poc_add = poc_add,command = command,vulnerability = vuln_name,time_out = time_out))
+        else:
+            dataList.append(exploit.exploit(target=targets, flag=flag, poc_add=poc_add, command=command, vulnerability=vuln_name,time_out=time_out))
+        tool.setSheetTitle(t1_len=30, title1='Target', t2_len=8, title2='Vulnerability', t3_len=2, title3='Vulnerable',t4_len=10, title4='Response')
+        for data in dataList:
+            tool.print2sheet(t1_len=30, t1=data["target"], title1='Target',t2_len=8,t2=data["vuln"],title2='Vulnerability',
+                             t3_len=2, t3=data["isVuln"], title3='Vulnerable', t4_len=10, t4=str(data['response']),
+                             title4='Response')
 #检测泛微OA数据库配置信息泄漏 
     elif options.ecology:
         if options.o:
@@ -176,7 +220,6 @@ def menu():
         if options.pro:
             protocol = str(options.pro)
         ecology_OA_db_conf_leak.run(url,protocol)
-
     else:
         helpInfo()
 
@@ -205,40 +248,28 @@ AWVS:
     -o       Output result to file
 Vulnerability:
     -weblogic To find target's weblogic vulnerability                       Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1
-    -joomla   To find target's joomla   vulnerability                       Example: -joomla    /usrs/targets.txt or -joomla  https://www.baidu.com   
+    -joomla   To find target's joomla   vulnerability                       Example: -joomla    /usrs/targets.txt or -joomla  https://www.baidu.com
+    -exploit                                                                Example: -exploit  /usrs/targets.txt or -exploit 127.0.0.1
+    -command                                                                Example: -command  python2 poc.py  -p 3389  -d /web/web.xml
+    -poc_add                                                                Example: -poc_add  "vulnerability,cve-2020-01-01,cve-2020-01-01.py"
+    -flag                                                                   Example: -flag='Refused,No Response'
+    -time_out                                                               Example: -time_out 1  Default is 2
+    -vuln_name                                                              Example: -vuln_name  cve-2020-01-01 Default is NULL
     -ecology  To find target's ecology  vulnerability                       Example: -ecology   baidu.com or -ecology   /usrs/targets.txt       
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
-    python  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800
-    python  find.py   -add C:\\Users\\urls.txt   
-    python  find.py   -delete 1                                                              
+    python3  find.py   -exploit  /user/targets.txt   -command="python2  cve-2020-01-01.py -d /web/web.xml" -poc_add = "vulnerability,cve-2020-01-01,cve-2020-01-01.py"
+    python3  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800
+    python3  find.py   -add C:\\Users\\urls.txt   
+    python3  find.py   -delete 1                                                              
     --------------------------------------------------------------------------------------------------------------------
     """.format(time=present_awvs_time)
     printc.printf(helpInformaiton,"yellow")
     # print(helpInformaiton)
 
 if __name__=='__main__':
-    # awvs_time  =  "20190724T120000+0800"
-    # print(awvs_time)
-    # standard   = awvs.awvs2standardTime(awvs_time)  #字典
-    # print(standard)
-    # future     = awvs.nSecondLatter(standard,61)
-    # print(future)
-    # awvs_time  = awvs.time2awvstime(future)
-    # print(awvs_time)
-    # start_time = "20190724T120000+0800"
-    # count  = 0
-    # for i in range(100000000):
-    #     count  = count + 1
-    #     if count % 11 == 0:
-    #         start_time = awvs.awvs2standardTime(start_time)     #将awvs时间转化为标准时间 并返回字典的形式{"y":"2019","m":"07","d":"12","h":"12","m":"20","s":"00"}
-    #         # print(start_time)
-    #         start_time = awvs.nSecondLatter(start_time,600)     #每扫描10个任务,后面任务依次类推推迟600s扫描
-    #         # print(start_time)
-    #         start_time = awvs.time2awvstime(start_time)         #转化为awvs能够识别的时间20190805T123640+0800
-    #         print(start_time)
+    #res =  exploit.exploit(target="123.206.106.206",flag=["Operation timed out","most recent call last",'NotImplementedError'],poc_add=["vulnerability","CNVD-2020-10487","CNVD-2020-10487.py"],command="python2 CNVD-2020-10487.py  -p 8009  -f WEB-INF/web.xml ",vulnerability="CNVD-2020-10487",time_out="2")
+    #print(res)
     menu()
-    # print(tool.input2result("https://www.baidu.com"))
-    # print(tool.input2result("C:\\Users\\Ma\\Desktop\\ip.txt"))
   
 
