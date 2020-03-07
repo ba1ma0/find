@@ -97,7 +97,8 @@
       python3  find.py   -exploit /Users/ba1ma0/Desktop/targets.txt   -command="python2 CNVD-2020-10487.py  -p 8009  -f WEB-INF/web.xml"  -poc_add "vulnerability,CNVD-2020-10487,CNVD-2020-10487.py"  -vuln_name="CNVD-2020-10487" ```  
     ![](https://raw.githubusercontent.com/ba1ma0/images/master/find/9.png)
     (3)具体参数解释如下  
-      ```#此为批量攻击框架,只要按照相关参数配置,并把相关poc放到相关的文件夹下面便可进行批量探测
+      ```python
+此为批量攻击框架,只要按照相关参数配置,并把相关poc放到相关的文件夹下面便可进行批量探测
 target   :[必须指定] 该字段要进行攻击的目标参数,这个需要根据源poc中的要求来填写。比如原poc中要求输入的参数是为127.0.0.1那么您就不能填写https://127.0.0.1 
 flag     :[非必须]   该数组主要是根据poc执行之后的结果中是否含有某个字段来判断原POC执行是否成功以判断待测试站点是否存在漏洞
 poc_add  :[必须指定] 该数组存储poc的相对路径信息比如poc的相对路径信息为../../find/vulnerability/cve-2020-0708,则poc_add存储的信息为["vulnerability","cve-2020-0708","cve-2020-0708"]信息
