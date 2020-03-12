@@ -1,7 +1,8 @@
-import socket,os,threading,queue,time,re,platform,sys,json,random
+# -- coding: utf-8 --
+import socket,os,threading,queue,time,re,platform,sys,json,random,subprocess,datetime
 from module import printc
 try:
-    import requests
+    import requests,telnetlib
 except:
     msg1="\n[-] 检测到您还没有安装Python3的requests依赖包,请使用 pip install requests 安装\n"
     printc.printf(msg1,'red')
@@ -77,7 +78,7 @@ def content2List(add):
 #     f.write(content)
 #     f.write("\n")
 #     f.close()
-
+#将用户输出到命令中的内容保存至txt文件中
 class Logger(object):
     def __init__(self, fileN="Default.log"):
         try:
@@ -94,23 +95,25 @@ def output(add):
     sys.stdout = Logger(add)
 
 #存放输出文件的文件名
-def address(add):
-    if "Windows" in systeminfo:
-        if ":" in add:
-            address=add
-        else:
-            address = str(os.getcwd()) + "\\" + str(add)
-    elif "Linux" in systeminfo:
-        if "/" in add:
-             address=add
-        else:
-            address = str(os.getcwd()) + "/" + str(add) 
+def address(fileName):
+    root_dir    = os.getcwd()                            #程序的根目录
+    address  = os.path.join(root_dir,'output',fileName)  #该出妙在不用人工判断不同平台,比如是Windows还是Linux,程序可以自己判断
+    # if "Windows" in systeminfo:
+    #     if ":" in add:
+    #         address=add
+    #     else:
+    #         address = str(os.getcwd()) + "\\" + str(add)
+    # elif "Linux" in systeminfo:
+    #     if "/" in add:
+    #          address=add
+    #     else:
+    #         address = str(os.getcwd()) + "/" + str(add) 
     return address
 #如果存在输入文件则打印,否则不打印    
 def printIfExist(address):
     if address:
-        s="[*] The result file is at {add}".format(add=address)
-        printc.printf(s, "skyblue")
+        msg  =  "[*] The result file is at {add}".format(add=address)
+        print(msg)
 
 #判断是否访问的页面是否存在
 def ifExist(res):
@@ -436,10 +439,14 @@ def print2sheet(t1_len=0,t1=0,title1=0,t2_len=0,t2=0,title2=0,t3_len=0,t3=0,titl
 #根据用户输入C:\targets.txt   /use/targets.txt   http://www.baidu.com   返回不同字符串或者列表  判断用户输入的是地址还是网址
 #简单点讲就是根据用户输入的来决定输出结果是什么
 def input2result(s):
+    print(s)
     res = s
     if "http" in s:
         res = s
     elif "/"  in s:
+        res = content2List(s)
+    elif ":\\" in s:
+        #print("当前是windows")
         res = content2List(s)
     return res
 #根据ip地址判断该IP地址详细信息 例如:218.205.56.222返回结果:中国浙江杭州移动
@@ -504,6 +511,9 @@ def  findAddressByIp(ip,protocol="http"):
                     except:
                         print2sheet(t1_len=8,t1=str(i),title1="IP",t2_len=1,t2="None",title2='API',t3_len=10,t3="两个接口都无发正常使用,请手工查询",title3='Information')
                         pass
+
+
+
     #     except Exception as e:
 #         msg  =  '''出问题了!请检查是否是以下原因
 # 1.网络是够通畅

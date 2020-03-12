@@ -175,8 +175,8 @@ def menu():
     elif options.exploit:
         dataList    = []
         if options.o:
-            address = tool.address(options.o)
-            tool.output(address)
+            address = tools.address(options.o)
+            tools.output(address)
         targets      = tool.input2result(str(options.exploit))
         if options.command:
             command  = options.command
@@ -249,7 +249,7 @@ AWVS:
 Vulnerability:
     -weblogic To find target's weblogic vulnerability                       Example: -weblogic  /usrs/targets.txt or -weblogic 127.0.0.1
     -joomla   To find target's joomla   vulnerability                       Example: -joomla    /usrs/targets.txt or -joomla  https://www.baidu.com
-    -exploit                                                                Example: -exploit  /usrs/targets.txt or -exploit 127.0.0.1
+    -exploit                                                                Example: -exploit  /usrs/targets.txt or -exploit 127.0.0.1  -exploit="C:\\targets.txt"
     -command                                                                Example: -command  python2 poc.py  -p 3389  -d /web/web.xml
     -poc_add                                                                Example: -poc_add  "vulnerability,cve-2020-01-01,cve-2020-01-01.py"
     -flag                                                                   Example: -flag='Refused,No Response'
@@ -258,7 +258,7 @@ Vulnerability:
     -ecology  To find target's ecology  vulnerability                       Example: -ecology   baidu.com or -ecology   /usrs/targets.txt       
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
-    python3  find.py   -exploit  /user/targets.txt   -command="python2  cve-2020-01-01.py -d /web/web.xml" -poc_add = "vulnerability,cve-2020-01-01,cve-2020-01-01.py"
+    python3  find.py   -exploit  /user/targets.txt   -command="python2  cve-2020-01-01.py -d /web/web.xml" -poc_add="vulnerability,cve-2020-01-01,cve-2020-01-01.py"
     python3  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800
     python3  find.py   -add C:\\Users\\urls.txt   
     python3  find.py   -delete 1                                                              
