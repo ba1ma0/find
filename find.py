@@ -1,5 +1,5 @@
 # -- coding: utf-8 --
-import threading, socket,time,os,re,sys,string,platform
+import threading, socket,time,os,re,sys,string,platform,warnings
 from module import printc,butianInfo,queue,argparse,awvs,tool
 from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE,ecology_OA_db_conf_leak,CNVD_2020_10487_Tomcat_Ajp_lfi,exploit
 ######################################全局变量区######################################
@@ -12,6 +12,7 @@ time_show       =  present_time[1].replace(":","")                #当前时间1
 seconds_default =  600                                            #默认间隔时间10分钟
 present_awvs_time = "{day}T{time}+0800".format(day=day,time=time_show) #转为化为20190724T122000+0800
 ######################################全局变量区######################################
+warnings.filterwarnings('ignore')
 def menu():
     global vulnerable_list
     day         = time.strftime("%Y-%m-%d",time.localtime()).replace("-","")    #当前日期20190725
