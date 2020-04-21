@@ -448,6 +448,8 @@ def input2result(s):
     elif ":\\" in s:
         #print("当前是windows")
         res = content2List(s)
+    else:
+        res = content2List(s)
     return res
 #根据ip地址判断该IP地址详细信息 例如:218.205.56.222返回结果:中国浙江杭州移动
 #ip参数既可以是ip地址也可以存放ip地址的txt文件

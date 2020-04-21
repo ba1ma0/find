@@ -178,8 +178,8 @@ def menu():
     elif options.exploit:
         dataList    = []
         if options.o:
-            address = tools.address(options.o)
-            tools.output(address)
+            address = tool.address(options.o)
+            tool.output(address)
         targets      = tool.input2result(str(options.exploit))
         if options.command:
             command  = options.command
@@ -261,7 +261,7 @@ Vulnerability:
     -ecology  To find target's ecology  vulnerability                       Example: -ecology   baidu.com or -ecology   /usrs/targets.txt       
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
-    python3  find.py   -exploit /Users/test.txt   -command="python2  cve-2020-01-01.py  -p  8009  -f /web/web.xml" -poc_add="vulnerability,CNVD-2020-10487,CNVD-2020-10487.py"  -vuln_name="test"  -time_out=2
+    python3  find.py   -exploit C:\\test.txt   -command="python2  CNVD-2020-10487.py  -p  8009  -f /web/web.xml" -poc_add="vulnerability,CNVD-2020-10487,CNVD-2020-10487.py"  -vuln_name="test"  -time_out=2
     python3  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800
     python3  find.py   -add C:\\Users\\urls.txt   
     python3  find.py   -delete 1                                                              
