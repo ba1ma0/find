@@ -1,9 +1,11 @@
 # -- coding: utf-8 --
 import threading, socket,time,os,re,sys,string,platform,warnings
-from module import printc,butianInfo,queue,argparse,awvs,tool
-from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE,ecology_OA_db_conf_leak,CNVD_2020_10487_Tomcat_Ajp_lfi,exploit
+#from module import awvs                                        #此功能停止维护，因为新版的awvs已经支持批量导入
+from module import printc,butianInfo,queue,argparse,tool
+from vulnerability import exploit
+#from vulnerability import weblogic_cve_2019_2729,Joomla_3_4_6_RCE,ecology_OA_db_conf_leak,CNVD_2020_10487_Tomcat_Ajp_lfi,exploit  #以前封装的poc将停止使用，以后统一使用exploit框架
 ######################################全局变量区######################################
-current_dir     =  str(os.getcwdb(), encoding = "utf-8")          #获取当前文件根目录绝对路径
+current_dir     =  str(os.getcwdb())                             #获取当前文件根目录绝对路径
 vulnerable_list =  []                                             #存放有漏洞的主机
 present_time    =  time.strftime("%Y-%m-%d %X",time.localtime())  #当前详细时间 2019-08-08 14:59:22 
 present_time    =  present_time.split(" ")                        #转化为['2019-08-08', '14:59:47']
@@ -187,7 +189,7 @@ def menu():
         if options.flag:
             flag     = options.flag.split(",")
         else:
-            flag     = ["Operation timed out","most recent call last",'NotImplementedError']
+            flag     = ["Operation timed out","most recent call last",'NotImplementedError','']
         if options.poc_add:
             poc_add = options.poc_add.split(",")
         else:
@@ -259,7 +261,7 @@ Vulnerability:
     -ecology  To find target's ecology  vulnerability                       Example: -ecology   baidu.com or -ecology   /usrs/targets.txt       
                                                            Example
     --------------------------------------------------------------------------------------------------------------------
-    python3  find.py   -exploit  /user/targets.txt   -command="python2  cve-2020-01-01.py -d /web/web.xml" -poc_add="vulnerability,cve-2020-01-01,cve-2020-01-01.py"
+    python3  find.py   -exploit /Users/test.txt   -command="python2  cve-2020-01-01.py  -p  8009  -f /web/web.xml" -poc_add="vulnerability,CNVD-2020-10487,CNVD-2020-10487.py"  -vuln_name="test"  -time_out=2
     python3  find.py   -add C:\\Users\\urls.txt  -start {time}  -pro http   -profile  F  -speed f  -second 1800
     python3  find.py   -add C:\\Users\\urls.txt   
     python3  find.py   -delete 1                                                              
